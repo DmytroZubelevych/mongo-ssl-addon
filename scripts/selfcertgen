@@ -68,6 +68,9 @@ fi
 
 rm -f /var/lib/jelastic/keys/SSL-TLS/server-req.pem
 
+cat ${CERT_DIR}/root.key ${CERT_DIR}/root.crt > ${CERT_DIR}/root.pem
+cat ${CERT_DIR}/server.key ${CERT_DIR}/server.crt > ${CERT_DIR}/server.pem
+
 if [ "x${MONGO_USER}" == "xadmin" ]; then
     CLIENT_CERT_NAME="client"
 else
@@ -79,6 +82,7 @@ if [ ! -f ${CERT_DIR}/${CLIENT_CERT_NAME}.crt ]; then
     openssl req -new -key ${CERT_DIR}/${CLIENT_CERT_NAME}.key -out ${CERT_DIR}/${CLIENT_CERT_NAME}.csr -subj "/C=$KEY_COUNTRY/ST=$KEY_PROVINCE/L=$KEY_CITY/O=$KEY_ORG/CN=$MONGO_USER"
     #signing the client cert
     openssl x509 -req -in ${CERT_DIR}/${CLIENT_CERT_NAME}.csr -CA ${ROOT_CERT} -CAkey ${ROOT_KEY} -out ${CERT_DIR}/${CLIENT_CERT_NAME}.crt -CAcreateserial
+    cat ${CERT_DIR}/${CLIENT_CERT_NAME}.key ${CERT_DIR}/${CLIENT_CERT_NAME}.crt > ${CERT_DIR}/${CLIENT_CERT_NAME}.pem
 fi
 
 if [ "$UID" == '0' ]; then
