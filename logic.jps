@@ -249,9 +249,8 @@ actions:
 
   checkAppVersion:
     - cmd[${this.masternode}]: |-
-        source /etc/jelastic/metainf.conf
-        [ -f /root/check_app.sh ] && rm -f /root/check_app.sh;
-        wget -O /root/check_app.sh ${baseUrl}/scripts/check_app.sh?_r=${fn.random};
+        wget -O /root/check_app_new.sh ${baseUrl}/scripts/check_app.sh?_r=${fn.random} && \
+        mv -f /root/check_app_new.sh /root/check_app.sh && \
         bash /root/check_app.sh;
       user: root
 
@@ -267,10 +266,9 @@ actions:
         affectedNodes: ${this.nodesToEnableSSL}
 
   checkApplication:
-    - if ('${targetNodes.nodeGroup}'.indexOf('sqldb') > -1):
-      - checkAppVersion:
-          masternode: ${targetNodes.nodeGroup}
-      - if (response.out == "Non-supported"):
-        - stopEvent:
-            type: warning
-            message: Database version is not supported.
+    - checkAppVersion:
+        masternode: ${targetNodes.nodeGroup}
+    - if (response.out == "Non-supported"):
+      - stopEvent:
+          type: warning
+          message: Database version is not supported.
