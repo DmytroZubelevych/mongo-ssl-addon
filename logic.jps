@@ -189,7 +189,7 @@ actions:
         chown -R 700:700 ${globals.certFolder}; chmod 600 ${globals.certFolder}/*
       user: root
     - moveCertsToDirs:
-        affectedNodes: ${targetNodes.nodeGroup}
+        affectedNodes: ${this.affectedNodes}
 
   enableSSL:
     - cmd[${this.affectedNodes}]: |-
