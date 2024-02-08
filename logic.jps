@@ -135,7 +135,7 @@ actions:
     - cmd[${targetNodes.nodeGroup}]: |-
         mv ${globals.certFolder}/server/root.* ${globals.certFolder}/;
         rm -f ${globals.certFolder}/server/server.*
-        selfcertgen
+        selfcertgen admin ${env.domain} ${targetNodes.nodeGroup}
         mv -f ${globals.certFolder}/client/client.* ${globals.certFolder}/;
       user: root
     - moveCertsToDirs:
@@ -149,7 +149,7 @@ actions:
         user: root
     - cmd[${targetNodes.nodeGroup}]: |-
         mv -f ${globals.certFolder}/server/* ${globals.certFolder}/;
-        selfcertgen
+        selfcertgen admin ${env.domain} ${targetNodes.nodeGroup}
       user: root
     - moveCertsToDirs:
         affectedNodes: ${targetNodes.nodeGroup}

@@ -28,7 +28,7 @@ CERT_DIR="/var/lib/jelastic/keys/SSL-TLS";
 [ -z "$KEY_SIZE" ] && export KEY_SIZE=2048
 [ -z "$KEY_HOST" ] && export KEY_HOST=$(hostname)
 [ -z "$KEY_EXPIRE" ] && export KEY_EXPIRE=3650
-[ -z "$MONGO_USER" ] && export MONGO_USER="root"
+[ -z "$MONGO_USER" ] && export MONGO_USER="admin"
 
 ALTNAME=$(ip a | grep -A1 venet0 | grep inet | awk '{print $2}'| sed 's/\/[0-9]*//g' | head -n 2|tail -n 1)
 
