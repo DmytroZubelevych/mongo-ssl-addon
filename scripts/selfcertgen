@@ -54,10 +54,10 @@ if [ ! -f ${CERT_DIR}/server.crt ]; then
 echo "subjectAltName = @alt_names
 
 [alt_names]
-IP.1 = ${ALTNAME}" > /tmp/altname.ext
+IP.1 = ${ALTNAME}" > ~/altname.ext
     if [ ! -f ${CERT_DIR}/server/server.crt ]; then
         RANDFILE=/tmp/.random openssl req -newkey rsa:2048 -days 3650 -nodes -subj "/C=$KEY_COUNTRY/ST=$KEY_PROVINCE/L=$KEY_CITY/O=$KEY_ORG/CN=${KEY_HOST}" -keyout ${CERT_DIR}/server.key > ${CERT_DIR}/server-req.pem
-        RANDFILE=/tmp/.random openssl x509 -req -in ${CERT_DIR}/server-req.pem -days 3650 -CA ${ROOT_CERT} -CAkey ${ROOT_KEY} -set_serial 01 -extfile /tmp/altname.ext > ${CERT_DIR}/server.crt
+        RANDFILE=/tmp/.random openssl x509 -req -in ${CERT_DIR}/server-req.pem -days 3650 -CA ${ROOT_CERT} -CAkey ${ROOT_KEY} -set_serial 01 -extfile ~/altname.ext > ${CERT_DIR}/server.crt
         chmod 400 ${CERT_DIR}/root.key ${CERT_DIR}/server.key ${CERT_DIR}/server.crt ${CERT_DIR}/root.crt
     else
         echo "Server certificate is already present ${CERT_DIR}/server/server.crt "
@@ -66,10 +66,10 @@ else
     echo "Server certificate is already present ${CERT_DIR}/server.crt"
 fi
 
-rm -f /var/lib/jelastic/keys/SSL-TLS/server-req.pem
+rm -f /var/lib/jelastic/keys/SSL-TLS/server-req.pem ~/altname.ext
 
-cat ${CERT_DIR}/root.key ${CERT_DIR}/root.crt > ${CERT_DIR}/root.pem
-cat ${CERT_DIR}/server.key ${CERT_DIR}/server.crt > ${CERT_DIR}/server.pem
+[ -e ${CERT_DIR}/root.key ] && cat ${CERT_DIR}/root.key ${CERT_DIR}/root.crt > ${CERT_DIR}/root.pem
+[ -e ${CERT_DIR}/server.key ] && cat ${CERT_DIR}/server.key ${CERT_DIR}/server.crt > ${CERT_DIR}/server.pem
 
 if [ "x${MONGO_USER}" == "xadmin" ]; then
     CLIENT_CERT_NAME="client"
