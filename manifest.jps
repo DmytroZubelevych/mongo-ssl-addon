@@ -13,6 +13,8 @@ targetNodes:
   nodeType:
     - mongodb-dockerized
     - mongo
+    - mongo6
+    - mongo7
 
 settings:
   fields:
