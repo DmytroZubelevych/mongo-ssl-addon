@@ -11,6 +11,9 @@ targetNodes:
   nodeType:
     - mongodb-dockerized
     - mongodb
+    - mongo
+    - mongo6
+    - mongo7
     
 globals:
   mongoConfig: /etc/mongod.conf
