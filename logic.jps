@@ -65,7 +65,7 @@ onAfterMigrate:
   - reGenerateCerts
 
 buttons:
-  - confirmText: Do you want to reissue the SSL certificates (root, server and client) and keys (root, server and client)? Service restart will be done. All the already existing certificates (including CA) will be erased, client cert will be generated only for user "admin".
+  - confirmText: Do you want to reissue the SSL certificates (root, server and client) and keys (root, server and client)? Service restart will be done. All the already existing certificates (including CA) will be erased, client certificate will be generated only for user "admin".
     loadingText: Reissuing all certificates and keys...
     action: reGenerateCerts
     caption: Renew all certs
