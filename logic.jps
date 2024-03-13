@@ -17,6 +17,7 @@ targetNodes:
     
 globals:
   mongoConfig: /etc/mongod.conf
+  mongoExpressConfig: /usr/lib/node_modules/mongo-express/config.default.js
   certFolder: /var/lib/jelastic/keys/SSL-TLS
   keyPass: ${fn.password}
 
@@ -204,6 +205,10 @@ actions:
             yq eval -i '.net.tls.CAFile = "${globals.certFolder}/server/root.pem"' ${globals.mongoConfig}
             yq eval -i '.net.tls.allowConnectionsWithoutCertificates = true' ${globals.mongoConfig}
         fi
+        if [ -e ${globals.mongoExpressConfig} ]; then
+            sed -ci -e "s/^[[:space:]]*ssl[[:space:]]*:.*/      ssl: true,/" ${globals.mongoExpressConfig}
+            sed -ci -e "s/^[[:space:]]*sslValidate[[:space:]]*:.*/      sslValidate: false,/" ${globals.mongoExpressConfig}
+        fi
         systemctl reset-failed
       user: root
     - restartNodes:
@@ -213,10 +218,13 @@ actions:
   disableSSL:
     - cmd[${targetNodes.nodeGroup}]: |-
         if [ -e ${globals.mongoConfig} ]; then
-            yq eval -i 'del(.net.ssl.mode)' ${globals.mongoConfig} 
-            yq eval -i 'del(.net.ssl.PEMKeyFile)' ${globals.mongoConfig} 
-            yq eval -i 'del(.net.ssl.CAFile)' ${globals.mongoConfig} 
-            yq eval -i 'del(.net.ssl)' ${globals.mongoConfig} 
+            yq eval -i 'del(.net.tls.mode)' ${globals.mongoConfig} 
+            yq eval -i 'del(.net.tls.PEMKeyFile)' ${globals.mongoConfig} 
+            yq eval -i 'del(.net.tls.CAFile)' ${globals.mongoConfig} 
+            yq eval -i 'del(.net.tls)' ${globals.mongoConfig} 
+        fi
+        if [ -e ${globals.mongoExpressConfig} ]; then
+            sed -ci -e "s/^[[:space:]]*ssl[[:space:]]*:.*/      ssl: false,/" ${globals.mongoExpressConfig}
         fi
         for i in client.crt client.key root.crt root.pem 
         do
